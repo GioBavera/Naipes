@@ -1,0 +1,57 @@
+-- Ocho loco: gana quien se queda sin cartas.
+-- Se tira una carta del mismo rango o palo que la de arriba del descarte.
+-- El 8 es comodín. Cartas con efecto: 2 (el siguiente roba dos),
+-- J = 11 (el siguiente pierde el turno), Q = 12 (cambia el sentido).
+
+juego "Ocho loco"
+
+mazo francesa
+
+zonas comunes: descarte
+zonas de jugador: mano
+
+-- Se saca de encima primero las cartas más altas.
+estrategia descargadora:
+  tirar con mayor rango(carta)
+fin
+
+jugadores:
+  Ana  usa descargadora
+  Luis usa azar
+  Sol  usa azar
+
+preparacion:
+  mezclar mazo
+  repartir 5 de mazo a mano
+  mover 1 de mazo a descarte
+fin
+
+turno:
+  jugada tirar con carta de mano donde
+      rango(carta) = 8
+      o rango(carta) = rango(tope(descarte))
+      o palo(carta) = palo(tope(descarte)):
+    mover carta a descarte
+    si rango(carta) = 2 entonces
+      mover 2 de mazo a mano del siguiente
+    fin
+    si rango(carta) = 11 entonces
+      saltear siguiente
+    fin
+    si rango(carta) = 12 entonces
+      invertir sentido
+    fin
+  fin
+
+  jugada robar cuando no puede(tirar):
+    si cantidad(mazo) = 0 entonces
+      mover cantidad(descarte) - 1 de fondo de descarte a mazo
+      mezclar mazo
+    fin
+    mover 1 de mazo a mano
+  fin
+fin
+
+termina cuando alguno(cantidad(mano) = 0)
+
+gana menor cantidad(mano)

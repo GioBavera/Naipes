@@ -1,0 +1,54 @@
+-- Burro (simplificado, para tres jugadores): gana el primero que se queda
+-- sin cartas.
+-- Se juega de a vueltas de tres cartas. El primero tira la carta que quiera
+-- y los demás deben tirar una del mismo palo. Quien no tiene, roba del mazo
+-- hasta poder.
+-- Simplificación: la vuelta siguiente la empieza quien tiró la última
+-- carta, no quien tiró la más alta.
+
+juego "Burro"
+
+mazo española
+
+zonas comunes: pila, descarte
+zonas de jugador: mano
+
+-- Se saca de encima primero las cartas más altas.
+estrategia descargadora:
+  tirar con mayor rango(carta)
+fin
+
+jugadores:
+  Ana  usa descargadora
+  Luis usa azar
+  Sol  usa azar
+
+preparacion:
+  mezclar mazo
+  repartir 5 de mazo a mano
+fin
+
+turno:
+  -- Con la pila vacía se tira cualquier carta; si no, hay que seguir el palo.
+  jugada tirar con carta de mano donde
+      cantidad(pila) = 0 o palo(carta) = palo(tope(pila)):
+    mover carta a pila
+    -- Con tres cartas se completa la vuelta: se levantan y el mismo
+    -- jugador empieza la siguiente.
+    si cantidad(pila) = 3 entonces
+      mostrar "completa la vuelta y empieza la siguiente"
+      mover todo de pila a descarte
+      repetir turno
+    fin
+  fin
+
+  -- Quien no puede tirar roba una carta y vuelve a intentar.
+  jugada robar cuando no puede(tirar) y cantidad(mazo) > 0:
+    mover 1 de mazo a mano
+    repetir turno
+  fin
+fin
+
+termina cuando alguno(cantidad(mano) = 0)
+
+gana menor cantidad(mano)

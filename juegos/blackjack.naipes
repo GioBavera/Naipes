@@ -1,0 +1,53 @@
+-- Blackjack (simplificado): gana quien más se acerca a 21 sin pasarse.
+-- El as vale siempre 1 y hay un solo ganador (no se juega contra la banca
+-- por separado).
+
+juego "Blackjack"
+
+mazo francesa
+
+zonas de jugador: mano
+
+-- J, Q y K (11, 12 y 13) valen 10.
+valor de carta: si rango(carta) > 10 entonces 10 sino rango(carta)
+
+-- La banca pide hasta llegar a 17.
+estrategia banca:
+  pedir cuando suma(mano) < 17
+  plantarse
+fin
+
+estrategia cauta:
+  pedir cuando suma(mano) < 13
+  plantarse
+fin
+
+jugadores:
+  Ana   usa cauta
+  Luis  usa azar
+  Banca usa banca
+
+preparacion:
+  mezclar mazo
+  repartir 2 de mazo a mano
+fin
+
+turno:
+  jugada pedir:
+    mover 1 de mazo a mano
+    mostrar "suma" suma(mano)
+    si suma(mano) > 21 entonces
+      mostrar "se pasa de 21"
+      eliminar
+    sino
+      repetir turno
+    fin
+  fin
+
+  jugada plantarse:
+    mostrar "se queda con" suma(mano)
+    plantar
+  fin
+fin
+
+gana mayor suma(mano)

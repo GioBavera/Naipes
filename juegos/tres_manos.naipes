@@ -1,0 +1,64 @@
+-- Tres manos: se juegan tres manos de 5 cartas y los puntos se acumulan.
+-- En cada ronda todos tiran una carta; la más alta gana la ronda y suma
+-- los puntos de las cartas tiradas. Gana quien junta más puntos.
+
+juego "Tres manos"
+
+mazo española
+
+zonas comunes: descarte
+zonas de jugador: mano, mesa
+
+variables comunes: manos = 0
+variables de jugador: puntos = 0
+
+-- Las figuras (10, 11 y 12) valen 10 puntos; el resto, su número.
+valor de carta: si rango(carta) >= 10 entonces 10 sino rango(carta)
+
+estrategia fuerte:
+  tirar con mayor rango(carta)
+fin
+
+estrategia paciente:
+  tirar con menor rango(carta)
+fin
+
+jugadores:
+  Ana  usa fuerte
+  Luis usa paciente
+  Sol  usa azar
+
+preparacion:
+  mezclar mazo
+  repartir 5 de mazo a mano
+fin
+
+turno:
+  jugada tirar con carta de mano:
+    mover carta a mesa
+  fin
+fin
+
+cierre de ronda:
+  mayor en rango(tope(mesa)):
+    asignar puntos = puntos + suma(mesa de todos)
+  empate:
+    mostrar "empate: nadie suma"
+  fin
+  mover todo de mesa de todos a descarte
+
+  -- Cuando se terminan las cartas, se cuenta la mano y se reparte de nuevo.
+  si todos(cantidad(mano) = 0) entonces
+    asignar manos = manos + 1
+    si manos < 3 entonces
+      mostrar "nueva mano"
+      mover todo de descarte a mazo
+      mezclar mazo
+      repartir 5 de mazo a mano
+    fin
+  fin
+fin
+
+termina cuando manos = 3
+
+gana mayor puntos

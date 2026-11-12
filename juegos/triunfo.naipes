@@ -1,0 +1,58 @@
+-- La mayor con triunfo: como "La mayor", pero hay un palo de triunfo que
+-- le gana a todos los demás. El triunfo se sortea en cada partida: es el
+-- palo de una carta que se da vuelta después de repartir.
+
+juego "La mayor con triunfo"
+
+mazo española
+
+zonas comunes: descarte, muestra
+zonas de jugador: mano, mesa
+
+variables comunes: triunfo = ninguno
+variables de jugador: rondas = 0
+
+-- La fuerza de una carta: su número, y las del triunfo 100 puntos más.
+valor de carta: rango(carta) + si palo(carta) = triunfo entonces 100 sino 0
+
+-- Tira siempre su carta más fuerte.
+estrategia fuerte:
+  tirar con mayor valor(carta)
+fin
+
+-- Guarda los triunfos y las cartas altas para el final.
+estrategia paciente:
+  tirar con menor valor(carta)
+fin
+
+jugadores:
+  Ana  usa fuerte
+  Luis usa paciente
+  Sol  usa azar
+
+preparacion:
+  mezclar mazo
+  repartir 5 de mazo a mano
+  mover 1 de mazo a muestra
+  asignar triunfo = palo(tope(muestra))
+fin
+
+turno:
+  jugada tirar con carta de mano:
+    mover carta a mesa
+  fin
+fin
+
+cierre de ronda:
+  mayor en valor(tope(mesa)):
+    mostrar "gana la ronda"
+    asignar rondas = rondas + 1
+  empate:
+    mostrar "empate: nadie gana la ronda"
+  fin
+  mover todo de mesa de todos a descarte
+fin
+
+termina cuando todos(cantidad(mano) + cantidad(mesa) = 0)
+
+gana mayor rondas

@@ -1,0 +1,43 @@
+-- Guerra: cada jugador da vuelta una carta y la más alta se lleva todas.
+-- No hay decisiones: sirve para probar el núcleo del lenguaje.
+
+juego "Guerra"
+
+mazo española
+
+zonas comunes: botin
+zonas de jugador: pila, batalla
+
+jugadores:
+  Ana  usa azar
+  Luis usa azar
+
+preparacion:
+  mezclar mazo
+  repartir todo de mazo a pila
+fin
+
+turno:
+  jugada tirar cuando cantidad(pila) > 0:
+    mover 1 de pila a batalla
+  fin
+fin
+
+cierre de ronda:
+  mayor en rango(tope(batalla)):
+    mostrar "gana la batalla"
+    -- Las cartas ganadas se mezclan antes de guardarlas: si se guardan
+    -- siempre en el mismo orden, la partida puede repetirse sin fin.
+    mover todo de batalla de todos a botin
+    mezclar botin
+    mover todo de botin a fondo de pila
+  empate:
+    mostrar "guerra: las cartas quedan en la mesa"
+  fin
+fin
+
+termina cuando alguno(cantidad(pila) + cantidad(batalla) = 0)
+
+gana mayor cantidad(pila)
+
+limite 10000 turnos

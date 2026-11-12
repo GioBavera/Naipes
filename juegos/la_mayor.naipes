@@ -1,0 +1,54 @@
+-- La mayor: cada jugador recibe 5 cartas. En cada ronda todos tiran una
+-- y la más alta gana la ronda. Gana la partida quien gana más rondas.
+
+juego "La mayor"
+
+mazo española
+
+zonas comunes: descarte
+zonas de jugador: mano, mesa
+
+-- Cada jugador lleva la cuenta de las rondas que ganó.
+variables de jugador: rondas = 0
+
+-- Tira siempre su carta más alta.
+estrategia fuerte:
+  tirar con mayor rango(carta)
+fin
+
+-- Guarda las cartas altas para el final.
+estrategia paciente:
+  tirar con menor rango(carta)
+fin
+
+jugadores:
+  Ana  usa fuerte
+  Luis usa paciente
+  Sol  usa azar
+
+preparacion:
+  mezclar mazo
+  repartir 5 de mazo a mano
+fin
+
+turno:
+  jugada tirar con carta de mano:
+    mover carta a mesa
+  fin
+fin
+
+cierre de ronda:
+  mayor en rango(tope(mesa)):
+    mostrar "gana la ronda"
+    asignar rondas = rondas + 1
+  empate:
+    mostrar "empate: nadie gana la ronda"
+  fin
+  mover todo de mesa de todos a descarte
+fin
+
+-- Se cuentan también las cartas de la mesa para que la última ronda
+-- se resuelva antes de terminar.
+termina cuando todos(cantidad(mano) + cantidad(mesa) = 0)
+
+gana mayor rondas

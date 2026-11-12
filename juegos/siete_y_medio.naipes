@@ -1,0 +1,49 @@
+-- Siete y medio (sin banca): gana quien más se acerca a 7.5 sin pasarse.
+
+juego "Siete y medio"
+
+mazo española sin 8, 9
+
+zonas de jugador: mano
+
+-- Las figuras (10, 11 y 12) valen medio punto.
+valor de carta: si rango(carta) >= 10 entonces 0.5 sino rango(carta)
+
+estrategia prudente:
+  plantarse cuando suma(mano) >= 5
+  pedir
+fin
+
+estrategia arriesgada:
+  plantarse cuando suma(mano) >= 7
+  pedir
+fin
+
+jugadores:
+  Ana  usa prudente
+  Luis usa arriesgada
+  Sol  usa azar
+
+preparacion:
+  mezclar mazo
+  repartir 1 de mazo a mano
+fin
+
+turno:
+  jugada pedir:
+    mover 1 de mazo a mano
+    mostrar "suma" suma(mano)
+    si suma(mano) > 7.5 entonces
+      mostrar "se pasa de siete y medio"
+      eliminar
+    sino
+      repetir turno
+    fin
+  fin
+
+  jugada plantarse:
+    plantar
+  fin
+fin
+
+gana mayor suma(mano)

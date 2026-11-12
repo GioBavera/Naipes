@@ -1,0 +1,53 @@
+-- Treinta y uno: hay una pila común y cada carta tirada se suma al total.
+-- Quien hace que el total pase de 31, pierde. Es para dos jugadores.
+
+juego "Treinta y uno"
+
+mazo francesa
+
+zonas comunes: pila
+zonas de jugador: mano
+
+-- J, Q y K (11, 12 y 13) valen 10.
+valor de carta: si rango(carta) > 10 entonces 10 sino rango(carta)
+
+-- Tira la carta más alta que no la hace perder: apura el final.
+estrategia apurada:
+  tirar con mayor valor(carta)
+fin
+
+-- Tira la carta más baja: estira la partida todo lo posible.
+estrategia paciente:
+  tirar con menor valor(carta)
+fin
+
+jugadores:
+  Ana  usa apurada
+  Luis usa paciente
+
+preparacion:
+  mezclar mazo
+  repartir 4 de mazo a mano
+fin
+
+turno:
+  -- Solo se puede tirar una carta que no pase el total de 31.
+  jugada tirar con carta de mano donde suma(pila) + valor(carta) <= 31:
+    mover carta a pila
+    mostrar "total" suma(pila)
+    mover 1 de mazo a mano
+  fin
+
+  -- Si ninguna carta sirve, hay que tirar igual y se pierde.
+  jugada pasarse con carta de mano cuando no puede(tirar):
+    mover carta a pila
+    mostrar "total" suma(pila)
+    mostrar "se pasa de 31 y pierde"
+    eliminar
+  fin
+fin
+
+termina cuando suma(pila) > 31
+
+-- Solo queda en juego el que no se pasó, así que gana él.
+gana mayor cantidad(mano)

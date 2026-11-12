@@ -1,0 +1,60 @@
+-- Casita robada (simplificada, para dos jugadores): gana quien termina
+-- con la casita más grande.
+-- En su turno, un jugador tira una carta:
+--   * si tiene el mismo número que la de arriba de la casita del rival,
+--     le roba la casita entera;
+--   * si tiene el mismo número que la de arriba de la mesa, levanta esa carta;
+--   * si no, la deja en la mesa.
+-- Simplificación: de la mesa solo se puede levantar la carta de arriba.
+
+juego "Casita robada"
+
+mazo española
+
+zonas comunes: mesa
+zonas de jugador: mano, casita
+
+-- Roba siempre que puede; si no, levanta; si no, deja su carta más baja.
+estrategia ladrona:
+  robar
+  levantar
+  dejar con menor rango(carta)
+fin
+
+jugadores:
+  Ana  usa ladrona
+  Luis usa azar
+
+preparacion:
+  mezclar mazo
+  repartir 3 de mazo a mano
+fin
+
+turno:
+  jugada robar con carta de mano donde
+      rango(carta) = rango(tope(casita del siguiente)):
+    mostrar "roba la casita"
+    mover todo de casita del siguiente a casita
+    mover carta a casita
+  fin
+
+  jugada levantar con carta de mano donde rango(carta) = rango(tope(mesa)):
+    mover 1 de mesa a casita
+    mover carta a casita
+  fin
+
+  jugada dejar con carta de mano cuando no puede(robar) y no puede(levantar):
+    mover carta a mesa
+  fin
+fin
+
+-- Cuando los dos se quedan sin cartas, se reparte de nuevo.
+cierre de ronda:
+  si todos(cantidad(mano) = 0) entonces
+    repartir 3 de mazo a mano
+  fin
+fin
+
+termina cuando cantidad(mazo) = 0 y todos(cantidad(mano) = 0)
+
+gana mayor cantidad(casita)
